@@ -2,6 +2,8 @@ package src.main.example.threadMain;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -9,9 +11,9 @@ import java.util.concurrent.CyclicBarrier;
 public class FileReaderWriterTask implements Runnable {
     private final CyclicBarrier cyclicBarrier;
     private final String filePath;
-    private final Map<String, String> fileStorage;
+    private final Map<String, List<String>> fileStorage;
 
-    public FileReaderWriterTask(String filePath, Map<String, String> fileStorage, CyclicBarrier cyclicBarrier) {
+    public FileReaderWriterTask(String filePath, Map<String, List<String>> fileStorage, CyclicBarrier cyclicBarrier) {
         this.filePath = filePath;
         this.fileStorage = fileStorage;
         this.cyclicBarrier = cyclicBarrier;
@@ -19,14 +21,13 @@ public class FileReaderWriterTask implements Runnable {
 
     public void readFile() {
         StringBuilder content = new StringBuilder();
+        List<String> fileContentValues = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                content.append(line).append("\'");
+                fileContentValues.add(line);
             }
-            fileStorage.put(filePath, content.toString());
-
-            cyclicBarrier.await();
+            fileStorage.put(filePath, fileContentValues);
         } catch (Exception e) {
             e.printStackTrace();
         }
