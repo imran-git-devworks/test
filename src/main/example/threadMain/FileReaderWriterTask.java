@@ -20,7 +20,6 @@ public class FileReaderWriterTask implements Runnable {
     }
 
     public void readFile() {
-        StringBuilder content = new StringBuilder();
         List<String> fileContentValues = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
